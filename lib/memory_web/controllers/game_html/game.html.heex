@@ -1,0 +1,8 @@
+<section>
+  <.greet name={@name} />
+
+  <p :if={@name == "andre"}>Some condition is true for user: <%= @name %></p>
+  <p :if={@name != "andre"}>Some condition is false for user: <%= @name %></p>
+
+  <p>Locale: <%= @locale %></p>
+</section>

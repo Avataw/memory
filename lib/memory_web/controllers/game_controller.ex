@@ -1,7 +1,13 @@
 defmodule MemoryWeb.GameController do
   use MemoryWeb, :controller
 
-  def start(conn, _params) do
-    render(conn, "show.html")
+  def index(conn, _params) do
+    render(conn, :game)
+  end
+
+  def play(conn, %{"name" => name}) do
+    conn
+    |> put_root_layout(html: false)
+    |> render(:game, name: name)
   end
 end
