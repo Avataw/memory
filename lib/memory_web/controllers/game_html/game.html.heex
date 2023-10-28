@@ -10,19 +10,98 @@
   </div>
   <ul class="grid grid-cols-4 gap-4">
     <li :for={card <- @cards}>
-      <div class="w-32 h-32 bg-pink-500">
-        <%= card.language %>
-        <%= card.type %>
+      <div
+        data-id={card.id}
+        data-language={card.language}
+        data-type={card.type}
+        class="w-32 h-32 bg-pink-500"
+        onclick="handleCardClick(event)"
+      >
+        <div class="card-content hidden">
+          <%= card.language %>
+          <%= card.type %>
+        </div>
       </div>
     </li>
   </ul>
 </section>
 
 <script>
-  let seconds = 0;
-  function updateTimer() {
-    document.getElementById('timer').innerText = seconds;
-    seconds++;
+    let seconds = 0;
+    let clicks = 0;
+    let firstCard = null;
+
+    function updateTimer() {
+      document.getElementById('timer').innerText = ++seconds;
+    }
+    setInterval(updateTimer, 1000);
+
+    function incrementClicks() {
+      document.getElementById('clicks').innerText = ++clicks;
+    }
+
+    function setPink(card) {
+      card.classList.remove('bg-blue-500');
+      card.classList.add('bg-pink-500');
+      
+      const content = card.querySelector('.card-content');
+      content.classList.add('hidden')
+    }
+
+    function setBlue(card) {
+      card.classList.remove('bg-pink-500');
+      card.classList.add('bg-blue-500');
+
+      const content = card.querySelector('.card-content');
+      content.classList.remove('hidden')
+    }
+
+    function setGreen(card) {
+      card.classList.remove('bg-blue-500');
+      card.classList.add('bg-green-500');
+
+      const content = card.querySelector('.card-content');
+      content.classList.remove('hidden')
+    }
+
+    async function handleCardClick(event) {
+      const card = event.target;
+      const cardId = card.getAttribute('data-id');
+      const cardLanguage = card.getAttribute('data-language');
+      const cardType = card.getAttribute('data-type');
+
+      if (firstCard && firstCard.id === cardId) {
+        setPink(firstCard)
+        firstCard = null;
+        return;
+      }
+
+      if (firstCard === null) {
+        firstCard = { element: card, id: cardId, language: cardLanguage, type: cardType  };
+        setBlue(card);
+        return;
+      }
+
+      if (firstCard) {
+        incrementClicks()
+
+          setBlue(card);
+          await sleep(1000);
+
+        if(firstCard.language === cardLanguage && firstCard.type !== cardType) {
+          setGreen(card);
+          setGreen(firstCard.element);
+        } else {
+          
+          setPink(card);
+          setPink(firstCard.element);
+        }
+
+        firstCard = null;
+      }
+    }
+
+    function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
-  setInterval(updateTimer, 1000);
 </script>
