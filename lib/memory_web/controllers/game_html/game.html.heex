@@ -1,3 +1,24 @@
+<style>
+  .clickable {
+    cursor: pointer;
+    background-color: pink;
+  }
+
+  .clickable > div {
+    display: none;
+  }
+
+  .active {
+    pointer-events: none;
+    background-color: hotpink;
+  }
+
+  .done {
+    pointer-events: none;
+    background-color: lightgreen;
+  }
+</style>
+
 <section>
   <div class="grid grid-cols-2 gap-2 mb-8">
     <h1 class="text-4xl text-right">timer:</h1>
@@ -14,10 +35,10 @@
         data-id={card.id}
         data-language={card.language}
         data-type={card.type}
-        class="w-32 h-32 bg-pink-500"
+        class="w-32 h-32 clickable"
         onclick="handleCardClick(event)"
       >
-        <div class="card-content hidden">
+        <div>
           <%= card.language %>
           <%= card.type %>
         </div>
@@ -30,73 +51,73 @@
     let seconds = 0;
     let clicks = 0;
     let firstCard = null;
+    let correctCards = 0;
+    let done = 0;
 
     function updateTimer() {
       document.getElementById('timer').innerText = ++seconds;
     }
-    setInterval(updateTimer, 1000);
+    
+    const timer = setInterval(updateTimer, 1000);
 
     function incrementClicks() {
       document.getElementById('clicks').innerText = ++clicks;
     }
 
-    function setPink(card) {
-      card.classList.remove('bg-blue-500');
-      card.classList.add('bg-pink-500');
-      
-      const content = card.querySelector('.card-content');
-      content.classList.add('hidden')
+    function endGame() {
+      clearInterval(timer);
+      alert(`DONE!\n It took you ${seconds} seconds and ${clicks} guesses!`);
     }
 
-    function setBlue(card) {
-      card.classList.remove('bg-pink-500');
-      card.classList.add('bg-blue-500');
-
-      const content = card.querySelector('.card-content');
-      content.classList.remove('hidden')
+    function activate(card) {
+      card.classList.remove('clickable');
+      card.classList.add('active');
     }
 
-    function setGreen(card) {
-      card.classList.remove('bg-blue-500');
-      card.classList.add('bg-green-500');
+    async function deactivate(cards, isPair) {
 
-      const content = card.querySelector('.card-content');
-      content.classList.remove('hidden')
+      if(!isPair) {
+        await sleep(500);
+      }
+
+      cards.forEach(card => {
+        card.classList.remove('active');
+        card.classList.add(isPair ? 'done' : 'clickable');
+      })
+
+     if(isPair){
+      done += 2;
+
+      if(done === 16) {
+        await sleep(250);
+        endGame();
+      }
+     }
     }
 
-    async function handleCardClick(event) {
+    function handleCardClick(event) {
       const card = event.target;
       const cardId = card.getAttribute('data-id');
       const cardLanguage = card.getAttribute('data-language');
       const cardType = card.getAttribute('data-type');
 
-      if (firstCard && firstCard.id === cardId) {
-        setPink(firstCard)
-        firstCard = null;
-        return;
-      }
+      activate(card);
 
       if (firstCard === null) {
         firstCard = { element: card, id: cardId, language: cardLanguage, type: cardType  };
-        setBlue(card);
         return;
       }
 
       if (firstCard) {
         incrementClicks()
 
-          setBlue(card);
-          await sleep(1000);
+        activate(card)
 
         if(firstCard.language === cardLanguage && firstCard.type !== cardType) {
-          setGreen(card);
-          setGreen(firstCard.element);
+          deactivate([card, firstCard.element], true)
         } else {
-          
-          setPink(card);
-          setPink(firstCard.element);
+          deactivate([card, firstCard.element], false)
         }
-
         firstCard = null;
       }
     }
