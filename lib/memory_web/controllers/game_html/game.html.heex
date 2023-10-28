@@ -1,8 +1,28 @@
 <section>
-  <p>Locale: <%= @locale %></p>
+  <div class="grid grid-cols-2 gap-2 mb-8">
+    <h1 class="text-4xl text-right">timer:</h1>
+    <div class="text-4xl text-left">
+      <span id="timer">0</span>
+      <span>s</span>
+    </div>
+    <h1 class="text-4xl text-right">tries:</h1>
+    <div id="clicks" class="text-4xl text-left">0</div>
+  </div>
   <ul class="grid grid-cols-4 gap-4">
-    <li :for={item <- [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]}>
-      <div class="w-16 h-16 bg-pink-500"></div>
+    <li :for={card <- @cards}>
+      <div class="w-32 h-32 bg-pink-500">
+        <%= card.language %>
+        <%= card.type %>
+      </div>
     </li>
   </ul>
 </section>
+
+<script>
+  let seconds = 0;
+  function updateTimer() {
+    document.getElementById('timer').innerText = seconds;
+    seconds++;
+  }
+  setInterval(updateTimer, 1000);
+</script>
