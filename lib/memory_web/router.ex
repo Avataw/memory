@@ -19,10 +19,7 @@ defmodule MemoryWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
-    get "/game", GameController, :index
-    get "/game/:name", GameController, :play
-
-    get "/redirect_test", PageController, :redirect_test
+    get "/game", GameController, :play
   end
 
   # Other scopes may use custom stacks.
