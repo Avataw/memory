@@ -20,6 +20,9 @@ defmodule MemoryWeb.Router do
 
     get "/", PageController, :home
     get "/game", GameController, :play
+    post "/game", GameController, :score
+
+    live "/highscore", HighscoreLive, :index
   end
 
   # Other scopes may use custom stacks.

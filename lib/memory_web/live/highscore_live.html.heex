@@ -1,0 +1,10 @@
+<div>
+  <h1>Highscores</h1>
+  <%= for highscore <- @highscores do %>
+    <div>
+      <h2><%= highscore.name %></h2>
+      <p><%= highscore.clicks %></p>
+      <p><%= highscore.time %></p>
+    </div>
+  <% end %>
+</div>

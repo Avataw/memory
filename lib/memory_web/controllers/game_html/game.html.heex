@@ -128,9 +128,19 @@
     }
 
     function endGame() {
-      clearInterval(timer);
-      started = false;
-      alert(`DONE!\n It took you ${seconds} seconds and ${clicks} guesses!`);
+     clearInterval(timer);
+     started = false;
+
+     name = displayNameInput.value;
+
+      fetch("/game", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': window.csrfToken 
+        },
+        body: JSON.stringify({name , clicks, time: seconds}),
+      })
     }
 
     function activate(card) {
