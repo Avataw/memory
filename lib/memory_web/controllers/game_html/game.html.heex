@@ -1,4 +1,13 @@
 <style>
+  .disabled {
+    pointer-events: none;
+    background-color: lightgray;
+  }
+
+  .disabled > div {
+    display: none;
+  }
+
   .clickable {
     cursor: pointer;
     background-color: pink;
@@ -21,6 +30,16 @@
 
 <section>
   <div class="grid grid-cols-2 gap-2 mb-8">
+    <input
+      id="displayName"
+      type="text"
+      placeholder="Enter display name"
+      class="border rounded p-2"
+    />
+    <button id="startBtn" disabled class="bg-gray-400 text-white p-2 ml-2" onclick="start(event)">
+      Start
+    </button>
+
     <h1 class="text-4xl text-right">timer:</h1>
     <div class="text-4xl text-left">
       <span id="timer">0</span>
@@ -35,7 +54,7 @@
         data-id={card.id}
         data-language={card.language}
         data-type={card.type}
-        class="w-32 h-32 clickable"
+        class="card w-32 h-32 disabled"
         onclick="handleCardClick(event)"
       >
         <div>
@@ -48,17 +67,61 @@
 </section>
 
 <script>
-    let seconds = 0;
-    let clicks = 0;
-    let firstCard = null;
-    let correctCards = 0;
-    let done = 0;
+  let seconds = 0;
+  let clicks = 0;
+  let firstCard = null;
+  let correctCards = 0;
+  let done = 0;
+  let started = false;
+  let timer = null;
+
+  const startBtn = document.getElementById('startBtn');
+  const displayNameInput = document.getElementById('displayName');
+
+  displayNameInput.addEventListener('input', () => {
+    if (displayNameInput.value.length >= 3) {
+      startBtn.removeAttribute('disabled');
+      startBtn.classList.remove('bg-gray-400');
+      startBtn.classList.add('bg-blue-500');
+    } else {
+      startBtn.setAttribute('disabled', true);
+      startBtn.classList.remove('bg-blue-500');
+      startBtn.classList.add('bg-gray-400');
+    }
+  });
+
+  function start() {
+
+    document.querySelectorAll('.card')
+    .forEach(card => {
+      card.classList.remove('disabled');
+      card.classList.remove('active');
+      card.classList.remove('done');
+      card.classList.add('clickable');
+    })
+
+    if(started) {
+      seconds = 0;
+      clicks = 0;
+      firstCard = null;
+      correctCards = 0;
+      done = 0;
+      document.getElementById('timer').innerText = seconds;
+      document.getElementById('clicks').innerText = clicks;
+      clearInterval(timer);
+    } else {
+      startBtn.innerText = "Restart"
+      started = true;
+    }
+    
+    timer = setInterval(updateTimer, 1000);
+
+  }
 
     function updateTimer() {
       document.getElementById('timer').innerText = ++seconds;
     }
     
-    const timer = setInterval(updateTimer, 1000);
 
     function incrementClicks() {
       document.getElementById('clicks').innerText = ++clicks;
@@ -66,6 +129,7 @@
 
     function endGame() {
       clearInterval(timer);
+      started = false;
       alert(`DONE!\n It took you ${seconds} seconds and ${clicks} guesses!`);
     }
 
@@ -96,6 +160,11 @@
     }
 
     function handleCardClick(event) {
+
+      if(!started) {
+        return;
+      }
+
       const card = event.target;
       const cardId = card.getAttribute('data-id');
       const cardLanguage = card.getAttribute('data-language');
@@ -122,7 +191,7 @@
       }
     }
 
-    function sleep(ms) {
+  function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 </script>
