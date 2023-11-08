@@ -101,21 +101,13 @@
     })
 
     if(started) {
-      seconds = 0;
-      clicks = 0;
-      firstCard = null;
-      correctCards = 0;
-      done = 0;
-      document.getElementById('timer').innerText = seconds;
-      document.getElementById('clicks').innerText = clicks;
-      clearInterval(timer);
+      location.reload();
     } else {
       startBtn.innerText = "Restart"
       started = true;
     }
     
     timer = setInterval(updateTimer, 1000);
-
   }
 
     function updateTimer() {
@@ -127,13 +119,12 @@
       document.getElementById('clicks').innerText = ++clicks;
     }
 
-    function endGame() {
+    async function endGame () {
      clearInterval(timer);
-     started = false;
 
      name = displayNameInput.value;
 
-      fetch("/game", {
+      await fetch("/game", {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -8,7 +8,6 @@ defmodule Memory do
   """
 
   defmodule Card do
-    @valid_types [:logo, :code]
     defstruct id: "", language: "", type: nil
 
     def new(language, type), do: %Card{id: Ecto.UUID.generate(), language: language, type: type}

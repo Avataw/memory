@@ -1,10 +1,55 @@
-<div>
-  <h1>Highscores</h1>
-  <%= for highscore <- @highscores do %>
-    <div>
-      <h2><%= highscore.name %></h2>
-      <p><%= highscore.clicks %></p>
-      <p><%= highscore.time %></p>
-    </div>
-  <% end %>
-</div>
+<style>
+  .highscore-row:nth-child(1) .rank {
+    font-size: 2.25rem;
+  }
+
+  .highscore-row:nth-child(1) .score {
+    color: gold;
+    font-size: 1.75rem;
+  }
+
+  .highscore-row:nth-child(2) .rank {
+    font-size: 2rem;
+  }
+
+  .highscore-row:nth-child(2) .score {
+    color: "#EAECEC";
+    font-size: 1.5rem;
+  }
+
+  .highscore-row:nth-child(3) .rank{
+    font-size: 1.75rem;
+  }
+
+  .highscore-row:nth-child(3) .score {
+    font-size: 1.25rem;
+  }
+</style>
+
+<section class="w-full h-full flex flex-col">
+  <h1 class="text-2xl font-bold mb-4">Highscores</h1>
+  <table class="w-2/3 text-sm text-left shadow-lg place-self-center">
+    <thead class="text-xs uppercase bg-gray-700 text-white">
+      <tr>
+        <th class="px-8 py-4">Rank</th>
+        <th class="px-8 py-4">Name</th>
+        <th class="px-8 py-4">Clicks</th>
+        <th class="px-8 py-4">Time</th>
+        <th class="px-8 py-4">Score</th>
+      </tr>
+    </thead>
+    <tbody>
+      <%= for highscore <- @highscores do %>
+        <tr class="highscore-row capitalize text-center bg-white border-b dark:bg-gray-800 dark:border-gray-700 text-white">
+          <td class="rank text-lg border px-8 py-4 font-bold">
+            <%= highscore.rank %>
+          </td>
+          <td class="border px-8 py-4 font-bold"><%= highscore.name %></td>
+          <td class="border px-8 py-4"><%= highscore.clicks %></td>
+          <td class="border px-8 py-4"><%= highscore.time %></td>
+          <td class="score border px-8 py-4"><%= highscore.score %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</section>

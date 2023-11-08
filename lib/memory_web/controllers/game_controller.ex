@@ -12,27 +12,13 @@ defmodule MemoryWeb.GameController do
   end
 
   def score(conn, %{"name" => name, "clicks" => clicks, "time" => time}) do
-    case Highscores.create_highscore(%{
-           "name" => name,
-           "clicks" => clicks,
-           "time" => time
-         }) do
-      {:ok, _highscore} ->
-        Phoenix.PubSub.broadcast(Memory.PubSub, "highscores:updates", :updated)
+    Highscores.create_highscore(%{
+      "name" => name,
+      "clicks" => clicks,
+      "time" => time
+    })
 
-        conn
-        |> put_flash(:info, "Score saved successfully!")
-        |> send_resp(200, "Score saved successfully!")
-
-      {:error, changeset} ->
-        IO.inspect(changeset)
-
-        conn
-        |> put_flash(:error, "Failed to save score.")
-        |> send_resp(
-          400,
-          "Failed to save score"
-        )
-    end
+    conn
+    |> send_resp(200, "Score was saved successfully")
   end
 end
