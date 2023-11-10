@@ -4,7 +4,7 @@
     background-color: lightgray;
   }
 
-  .disabled > div {
+  .disabled > * {
     display: none;
   }
 
@@ -13,13 +13,13 @@
     background-color: pink;
   }
 
-  .clickable > div {
+  .clickable > * {
     display: none;
   }
 
   .active {
     pointer-events: none;
-    background-color: hotpink;
+    background-color: #0026be20;
   }
 
   .done {
@@ -29,7 +29,7 @@
 </style>
 
 <section>
-  <div class="grid grid-cols-2 gap-2 mb-8">
+  <div class="grid grid-cols-4 gap-2 mb-8 mt-4">
     <input
       id="displayName"
       type="text"
@@ -40,28 +40,32 @@
       Start
     </button>
 
-    <h1 class="text-4xl text-right">timer:</h1>
-    <div class="text-4xl text-left">
-      <span id="timer">0</span>
-      <span>s</span>
-    </div>
-    <h1 class="text-4xl text-right">tries:</h1>
-    <div id="clicks" class="text-4xl text-left">0</div>
-  </div>
-  <ul class="grid grid-cols-4 gap-4">
-    <li :for={card <- @cards}>
-      <div
-        data-id={card.id}
-        data-language={card.language}
-        data-type={card.type}
-        class="card w-32 h-32 disabled"
-        onclick="handleCardClick(event)"
-      >
-        <div>
-          <%= card.language %>
-          <%= card.type %>
-        </div>
+    <div class="flex justify-center">
+      <h1 class="text-4xl text-right">timer:</h1>
+      <div class="text-4xl text-left">
+        <span id="timer">0</span>
+        <span>s</span>
       </div>
+    </div>
+    <div class="flex justify-center">
+      <h1 class="text-4xl text-right">tries:</h1>
+      <div id="clicks" class="text-4xl text-left">0</div>
+    </div>
+  </div>
+  <ul class="grid grid-cols-4 gap-1 justify-items-center h-full w-full">
+    <li
+      :for={card <- @cards}
+      data-id={card.id}
+      data-language={card.language}
+      data-type={card.type}
+      class="card disabled w-64 h-56 flex justify-center items-center"
+      onclick="handleCardClick(event)"
+    >
+      <%= if card.type == :logo do %>
+        <img src={"/images/#{card.language}.png"} class="w-3/4 h-3/4 object-contain" />
+      <% else %>
+        <img src={"/images/#{card.language}-code.png"} class="w-full h-full object-contain" />
+      <% end %>
     </li>
   </ul>
 </section>

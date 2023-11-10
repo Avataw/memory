@@ -8,7 +8,7 @@ defmodule MemoryWeb.GameController do
       |> Enum.flat_map(&Memory.Card.new_pair/1)
       |> Enum.shuffle()
 
-    render(conn, :game, cards: cards)
+    render(conn, :game, cards: cards, layout: false)
   end
 
   def score(conn, %{"name" => name, "clicks" => clicks, "time" => time}) do
