@@ -1,0 +1,202 @@
+<style>
+  .disabled {
+    pointer-events: none;
+    background-color: lightgray;
+  }
+
+  .disabled > * {
+    display: none;
+  }
+
+  .clickable {
+    cursor: pointer;
+    background-color: pink;
+  }
+
+  .clickable > * {
+    display: none;
+  }
+
+  .active {
+    pointer-events: none;
+    background-color: #0026be20;
+  }
+
+  .done {
+    pointer-events: none;
+    background-color: lightgreen;
+  }
+</style>
+
+<section>
+  <div class="grid grid-cols-4 gap-2 mb-8 mt-4">
+    <input
+      id="displayName"
+      type="text"
+      placeholder="Enter display name"
+      class="border rounded p-2"
+    />
+    <button id="startBtn" disabled class="bg-gray-400 text-white p-2 ml-2" onclick="start(event)">
+      Start
+    </button>
+
+    <div class="flex justify-center">
+      <h1 class="text-4xl text-right">timer:</h1>
+      <div class="text-4xl text-left">
+        <span id="timer">0</span>
+        <span>s</span>
+      </div>
+    </div>
+    <div class="flex justify-center">
+      <h1 class="text-4xl text-right">tries:</h1>
+      <div id="clicks" class="text-4xl text-left">0</div>
+    </div>
+  </div>
+  <ul class="grid grid-cols-4 gap-1 justify-items-center h-full w-full">
+    <li
+      :for={card <- @cards}
+      data-id={card.id}
+      data-language={card.language}
+      data-type={card.type}
+      class="card disabled w-64 h-56 flex justify-center items-center"
+      onclick="handleCardClick(event)"
+    >
+      <%= if card.type == :logo do %>
+        <img src={"/images/#{card.language}.png"} class="w-3/4 h-3/4 object-contain" />
+      <% else %>
+        <img src={"/images/#{card.language}-code.png"} class="w-full h-full object-contain" />
+      <% end %>
+    </li>
+  </ul>
+</section>
+
+<script>
+  let seconds = 0;
+  let clicks = 0;
+  let firstCard = null;
+  let correctCards = 0;
+  let done = 0;
+  let started = false;
+  let timer = null;
+
+  const startBtn = document.getElementById('startBtn');
+  const displayNameInput = document.getElementById('displayName');
+
+  displayNameInput.addEventListener('input', () => {
+    if (displayNameInput.value.length >= 3) {
+      startBtn.removeAttribute('disabled');
+      startBtn.classList.remove('bg-gray-400');
+      startBtn.classList.add('bg-blue-500');
+    } else {
+      startBtn.setAttribute('disabled', true);
+      startBtn.classList.remove('bg-blue-500');
+      startBtn.classList.add('bg-gray-400');
+    }
+  });
+
+  function start() {
+
+    document.querySelectorAll('.card')
+    .forEach(card => {
+      card.classList.remove('disabled');
+      card.classList.remove('active');
+      card.classList.remove('done');
+      card.classList.add('clickable');
+    })
+
+    if(started) {
+      location.reload();
+    } else {
+      startBtn.innerText = "Restart"
+      started = true;
+    }
+    
+    timer = setInterval(updateTimer, 1000);
+  }
+
+    function updateTimer() {
+      document.getElementById('timer').innerText = ++seconds;
+    }
+    
+
+    function incrementClicks() {
+      document.getElementById('clicks').innerText = ++clicks;
+    }
+
+    async function endGame () {
+     clearInterval(timer);
+
+     name = displayNameInput.value;
+
+      await fetch("/game", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': window.csrfToken 
+        },
+        body: JSON.stringify({name , clicks, time: seconds}),
+      })
+    }
+
+    function activate(card) {
+      card.classList.remove('clickable');
+      card.classList.add('active');
+    }
+
+    async function deactivate(cards, isPair) {
+
+      if(!isPair) {
+        await sleep(500);
+      }
+
+      cards.forEach(card => {
+        card.classList.remove('active');
+        card.classList.add(isPair ? 'done' : 'clickable');
+      })
+
+     if(isPair){
+      done += 2;
+
+      if(done === 16) {
+        await sleep(250);
+        endGame();
+      }
+     }
+    }
+
+    function handleCardClick(event) {
+
+      if(!started) {
+        return;
+      }
+
+      const card = event.target;
+      const cardId = card.getAttribute('data-id');
+      const cardLanguage = card.getAttribute('data-language');
+      const cardType = card.getAttribute('data-type');
+
+      activate(card);
+
+      if (firstCard === null) {
+        firstCard = { element: card, id: cardId, language: cardLanguage, type: cardType  };
+        return;
+      }
+
+      if (firstCard) {
+        incrementClicks()
+
+        activate(card)
+
+        if(firstCard.language === cardLanguage && firstCard.type !== cardType) {
+          deactivate([card, firstCard.element], true)
+        } else {
+          deactivate([card, firstCard.element], false)
+        }
+        firstCard = null;
+      }
+    }
+
+  function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+</script>

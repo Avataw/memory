@@ -8,6 +8,7 @@ defmodule MemoryWeb.Router do
     plug :put_root_layout, html: {MemoryWeb.Layouts, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug MemoryWeb.Plugs.Locale, "en"
   end
 
   pipeline :api do
@@ -18,6 +19,10 @@ defmodule MemoryWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
+    get "/game", GameController, :play
+    post "/game", GameController, :score
+
+    live "/highscore", HighscoreLive, :index
   end
 
   # Other scopes may use custom stacks.
