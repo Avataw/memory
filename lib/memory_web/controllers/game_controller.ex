@@ -18,6 +18,8 @@ defmodule MemoryWeb.GameController do
       "time" => time
     })
 
+    Phoenix.PubSub.broadcast(Memory.PubSub, "highscores:updates", :updated)
+
     conn
     |> send_resp(200, "Score was saved successfully")
   end
