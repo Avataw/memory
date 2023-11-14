@@ -28,37 +28,35 @@
   }
 </style>
 
-<section>
-  <div class="grid grid-cols-4 gap-2 mb-8 mt-4">
+<section class="flex flex-col justify-evenly py-4 px-2 md:py-8 md:px-8 gap-8 max-w-screen-2xl m-auto">
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
     <input
       id="displayName"
       type="text"
       placeholder="Enter display name"
-      class="border rounded p-2"
+      class="border rounded-full py-2 px-8"
     />
-    <button id="startBtn" disabled class="bg-gray-400 text-white p-2 ml-2" onclick="start(event)">
+    <button id="startBtn" disabled class="bg-gray-400 font-bold text-white rounded-full py-2 px-8 ml-2 md:w-max" onclick="start(event)">
       Start
     </button>
 
     <div class="flex justify-center">
-      <h1 class="text-4xl text-right">timer:</h1>
-      <div class="text-4xl text-left">
-        <span id="timer">0</span>
-        <span>s</span>
-      </div>
+      <h1 class="text-4xl text-right">timer: <span id="timer">0</span>s</h1>
     </div>
     <div class="flex justify-center">
-      <h1 class="text-4xl text-right">tries:</h1>
-      <div id="clicks" class="text-4xl text-left">0</div>
+      <h1 class="text-4xl text-right">tries: <span id="clicks">0</span></h1>
     </div>
   </div>
-  <ul class="grid grid-cols-4 gap-1 justify-items-center h-full w-full">
+  <div id="score" class="hidden flex justify-center">
+        <h1 class="text-5xl text-bold">Score: <span id="scoreValue">0</span></h1>
+  </div>
+  <ul class="grid gap-1 justify-items-center h-full w-full grid-cols-2 lg:grid-cols-4">
     <li
       :for={card <- @cards}
       data-id={card.id}
       data-language={card.language}
       data-type={card.type}
-      class="card disabled w-64 h-56 flex justify-center items-center"
+      class="card disabled w-full h-64 lg:w-56 xl:w-64 2xl:w-72 flex justify-center items-center"
       onclick="handleCardClick(event)"
     >
       <%= if card.type == :logo do %>
@@ -68,6 +66,15 @@
       <% end %>
     </li>
   </ul>
+  <div class="flex justify-center">
+      <.link
+            navigate={~p"/highscore"}
+            target="_blank"
+            class="bg-blue-500 hover:bg-blue-700 text-white text-xl rounded-full py-2 px-8"
+          >
+            Highscores
+      </.link>
+  </div>
 </section>
 
 <script>
@@ -78,6 +85,7 @@
   let done = 0;
   let started = false;
   let timer = null;
+  let score = 0;
 
   const startBtn = document.getElementById('startBtn');
   const displayNameInput = document.getElementById('displayName');
@@ -107,7 +115,7 @@
     if(started) {
       location.reload();
     } else {
-      startBtn.innerText = "Restart"
+      startBtn.innerText = "Reset"
       started = true;
     }
     
@@ -121,6 +129,11 @@
 
     function incrementClicks() {
       document.getElementById('clicks').innerText = ++clicks;
+    }
+
+    function displayScore() {
+          document.getElementById('scoreValue').innerText = Math.round(10000 / (seconds * 1.5 + clicks * 1.25));
+          document.getElementById('score').classList.remove('hidden');
     }
 
     async function endGame () {
@@ -146,7 +159,7 @@
     async function deactivate(cards, isPair) {
 
       if(!isPair) {
-        await sleep(500);
+        await sleep(1000);
       }
 
       cards.forEach(card => {
@@ -160,6 +173,7 @@
       if(done === 16) {
         await sleep(250);
         endGame();
+        displayScore();
       }
      }
     }
