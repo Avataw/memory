@@ -28,8 +28,8 @@
 
 <section class="w-full h-full flex flex-col items-center py-4 px-2 md:py-8 md:px-8 gap-8 max-w-screen-2xl m-auto">
   <h1 class="text-2xl font-bold">Highscores</h1>
-  <table class="w-full md:w-2/3 text-sm text-left shadow-lg overflow-scroll">
-    <thead class="text-xs uppercase bg-gray-700 text-white">
+  <table class="w-full md:w-2/3 text-sm text-left shadow-lg">
+    <thead class="text-xs uppercase bg-gray-700 text-white bg-gray-700">
       <tr>
         <th class="p-x-4 md:px-8 py-4 text-center">Rank</th>
         <th class="p-x-4 md:px-8 py-4 text-center">Name</th>
@@ -39,17 +39,8 @@
       </tr>
     </thead>
     <tbody>
-     <tr class="highscore-row capitalize text-center bg-white border-b dark:bg-gray-800 dark:border-gray-700 text-white">
-              <td class="rank text-lg border p-x-4 md:px-8 py-4 text-center font-bold">
-                1
-              </td>
-              <td class="border p-x-4 md:px-8 py-4 text-center font-bold">test</td>
-              <td class="border p-x-4 md:px-8 py-4 text-center">test</td>
-              <td class="border p-x-4 md:px-8 py-4 text-center">test</td>
-              <td class="score border p-x-4 md:px-8 py-4 text-center">test</td>
-            </tr>
       <%= for highscore <- @highscores do %>
-        <tr class="highscore-row capitalize text-center bg-white border-b dark:bg-gray-800 dark:border-gray-700 text-white">
+        <tr class="highscore-row capitalize text-center bg-white border-b bg-gray-800 border-gray-700 text-white">
           <td class="rank text-lg border p-x-4 md:px-8 py-4 text-center font-bold">
             <%= highscore.rank %>
           </td>
