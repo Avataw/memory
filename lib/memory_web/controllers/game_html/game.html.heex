@@ -19,7 +19,6 @@
 
   .active {
     pointer-events: none;
-    background-color: #0026be20;
   }
 
   .done {
@@ -43,18 +42,8 @@
   </nav>
 </header>
 
-<section>
-  <div class="grid grid-cols-4 gap-2 mb-8 mt-4">
-    <input
-      id="displayName"
-      type="text"
-      placeholder="Enter display name"
-      class="border rounded p-2"
-    />
-    <button id="startBtn" disabled class="bg-gray-400 text-white p-2 ml-2" onclick="start(event)">
-      Start
-    </button>
-
+<section class="m-4">
+  <div class="grid grid-cols-4 gap-2 mb-8 px-16">
     <div class="flex justify-center">
       <h1 class="text-4xl text-right">timer:</h1>
       <div class="text-4xl text-left">
@@ -62,18 +51,35 @@
         <span>s</span>
       </div>
     </div>
+
+    <input
+      id="displayName"
+      type="text"
+      placeholder="Your display name"
+      class="border rounded-lg p-2 text-black text-2xl"
+    />
+    <button
+      id="startBtn"
+      disabled
+      class="disabled:bg-gray-400 bg-violet-500 hover:bg-violet-700 text-white font-bold  text-2xl rounded-lg"
+      onclick="start(event)"
+    >
+      start game
+    </button>
+
     <div class="flex justify-center">
       <h1 class="text-4xl text-right">tries:</h1>
       <div id="clicks" class="text-4xl text-left">0</div>
     </div>
   </div>
-  <ul class="grid grid-cols-4 gap-1 justify-items-center h-full w-full">
+
+  <ul class="flex flex-wrap gap-4 justify-center justify-items-center h-full w-full">
     <li
       :for={card <- @cards}
       data-id={card.id}
       data-language={card.language}
       data-type={card.type}
-      class="card disabled w-64 h-56 flex justify-center items-center"
+      class="card disabled w-80 h-56 flex justify-center items-center"
       onclick="handleCardClick(event)"
     >
       <%= if card.type == :logo do %>
@@ -100,12 +106,8 @@
   displayNameInput.addEventListener('input', () => {
     if (displayNameInput.value.length >= 3) {
       startBtn.removeAttribute('disabled');
-      startBtn.classList.remove('bg-gray-400');
-      startBtn.classList.add('bg-blue-500');
     } else {
       startBtn.setAttribute('disabled', true);
-      startBtn.classList.remove('bg-blue-500');
-      startBtn.classList.add('bg-gray-400');
     }
   });
 
