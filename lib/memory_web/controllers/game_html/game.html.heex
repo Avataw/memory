@@ -28,6 +28,21 @@
   }
 </style>
 
+<header class="text-white py-4 px-8 flex items-center justify-between">
+  <h1 class="text-2xl font-bold">memory_leak</h1>
+  <nav>
+    <.link navigate={~p"/"} class="text-gray-300 hover:text-white px-4">
+      home
+    </.link>
+    <.link navigate={~p"/game"} class="text-white px-4 font-bold">
+      game
+    </.link>
+    <.link navigate={~p"/highscore"} class="text-gray-300 hover:text-white px-4">
+      highscore
+    </.link>
+  </nav>
+</header>
+
 <section>
   <div class="grid grid-cols-4 gap-2 mb-8 mt-4">
     <input
@@ -136,6 +151,8 @@
         },
         body: JSON.stringify({name , clicks, time: seconds}),
       })
+
+      window.location = "/highscore"
     }
 
     function activate(card) {
@@ -146,7 +163,7 @@
     async function deactivate(cards, isPair) {
 
       if(!isPair) {
-        await sleep(500);
+        await sleep(750);
       }
 
       cards.forEach(card => {
