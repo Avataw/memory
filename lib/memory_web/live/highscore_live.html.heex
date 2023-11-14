@@ -43,19 +43,19 @@
 </header>
 
 <section class="w-full h-full flex flex-col">
-  <table class="w-2/3 text-sm text-left shadow-lg place-self-center mt-4">
-    <thead class="text-xs uppercase bg-gray-700 text-white">
+  <table class="w-4/5 place-self-center mt-4">
+    <thead class="bg-violet-500 text-white">
       <tr>
-        <th class="px-8 py-4">Rank</th>
-        <th class="px-8 py-4">Name</th>
-        <th class="px-8 py-4">Clicks</th>
-        <th class="px-8 py-4">Time</th>
-        <th class="px-8 py-4">Score</th>
+        <th class="px-8 py-4">rank</th>
+        <th class="px-8 py-4">name</th>
+        <th class="px-8 py-4">clicks</th>
+        <th class="px-8 py-4">time</th>
+        <th class="px-8 py-4">score</th>
       </tr>
     </thead>
     <tbody>
       <%= for highscore <- @highscores do %>
-        <tr class="highscore-row capitalize text-center bg-white border-b dark:bg-gray-800 dark:border-gray-700 text-white">
+        <tr class="highscore-row capitalize text-center">
           <td class="rank text-lg border px-8 py-4 font-bold">
             <%= highscore.rank %>
           </td>
