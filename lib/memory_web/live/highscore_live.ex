@@ -1,5 +1,6 @@
 defmodule MemoryWeb.HighscoreLive do
   use Phoenix.LiveView
+  use MemoryWeb, :html
 
   def mount(_params, _session, socket) do
     Phoenix.PubSub.subscribe(Memory.PubSub, "highscores:updated")
