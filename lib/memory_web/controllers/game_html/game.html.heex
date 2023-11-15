@@ -42,35 +42,30 @@
   </nav>
 </header>
 
-<section class="m-4">
-  <div class="grid grid-cols-4 gap-2 mb-8 px-16">
-    <div class="flex justify-center">
-      <h1 class="text-4xl text-right">timer:</h1>
-      <div class="text-4xl text-left">
-        <span id="timer">0</span>
-        <span>s</span>
-      </div>
+<section class="m-4 flex flex-col gap-8">
+  <div class="flex flex-wrap gap-4 items-center justify-evenly">
+    <h1 class="text-4xl order-2 lg:order-none">timer: <span id="timer">0</span>s</h1>
+
+    <div class="flex flex-wrap gap-2 w-full lg:w-max min-w-0 items-center justify-center">
+        <input
+          id="displayName"
+          type="text"
+          placeholder="Your display name"
+          class="border rounded-lg py-4 px-8 text-black text-2xl min-w-0"
+        />
+        <button
+          id="startBtn"
+          disabled
+          class="py-4 px-8 disabled:bg-gray-400 bg-violet-500 hover:bg-violet-700 text-white font-bold text-2xl rounded-lg w-max"
+          onclick="start(event)"
+        >
+          start game
+        </button>
     </div>
 
-    <input
-      id="displayName"
-      type="text"
-      placeholder="Your display name"
-      class="border rounded-lg p-2 text-black text-2xl"
-    />
-    <button
-      id="startBtn"
-      disabled
-      class="disabled:bg-gray-400 bg-violet-500 hover:bg-violet-700 text-white font-bold  text-2xl rounded-lg"
-      onclick="start(event)"
-    >
-      start game
-    </button>
+    <h1 class="text-4xl order-3">tries: <span id="clicks">0</span></h1>
 
-    <div class="flex justify-center">
-      <h1 class="text-4xl text-right">tries:</h1>
-      <div id="clicks" class="text-4xl text-left">0</div>
-    </div>
+    <h1 id="score" class="text-5xl order-4 w-full text-center hidden">score: <span id="scoreValue">0</span></h1>
   </div>
 
   <ul class="flex flex-wrap gap-4 justify-center justify-items-center h-full w-full">
@@ -79,7 +74,7 @@
       data-id={card.id}
       data-language={card.language}
       data-type={card.type}
-      class="card disabled w-80 h-56 flex justify-center items-center"
+      class="card disabled w-full md:w-80 h-56 flex justify-center items-center"
       onclick="handleCardClick(event)"
     >
       <%= if card.type == :logo do %>
@@ -124,17 +119,17 @@
     if(started) {
       location.reload();
     } else {
-      startBtn.innerText = "Restart"
+      startBtn.innerText = "Reset"
       started = true;
     }
-    
+
     timer = setInterval(updateTimer, 1000);
   }
 
     function updateTimer() {
       document.getElementById('timer').innerText = ++seconds;
     }
-    
+
 
     function incrementClicks() {
       document.getElementById('clicks').innerText = ++clicks;
@@ -149,7 +144,7 @@
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-CSRF-Token': window.csrfToken 
+          'X-CSRF-Token': window.csrfToken
         },
         body: JSON.stringify({name , clicks, time: seconds}),
       })
@@ -177,7 +172,9 @@
       done += 2;
 
       if(done === 16) {
-        await sleep(250);
+        displayScore();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        await sleep(1500);
         endGame();
       }
      }
@@ -213,6 +210,11 @@
         }
         firstCard = null;
       }
+    }
+
+    function displayScore() {
+      document.getElementById('scoreValue').innerText = Math.round(10000 / (seconds * 1.5 + clicks * 1.25));
+      document.getElementById('score').classList.remove('hidden');
     }
 
   function sleep(ms) {

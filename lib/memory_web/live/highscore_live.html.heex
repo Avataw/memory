@@ -44,25 +44,25 @@
 
 <section class="w-full h-full flex flex-col">
   <table class="w-4/5 place-self-center mt-4">
-    <thead class="bg-violet-500 text-white">
+    <thead class="bg-violet-500 text-white border">
       <tr>
-        <th class="px-8 py-4">rank</th>
-        <th class="px-8 py-4">name</th>
-        <th class="px-8 py-4">clicks</th>
-        <th class="px-8 py-4">time</th>
-        <th class="px-8 py-4">score</th>
+        <th class="md:px-8 py-4 text-center">rank</th>
+        <th class="md:px-8 py-4 text-center">name</th>
+        <th class="md:px-8 py-4 text-center">clicks</th>
+        <th class="md:px-8 py-4 text-center">time</th>
+        <th class="md:px-8 py-4 text-center">score</th>
       </tr>
     </thead>
     <tbody>
       <%= for highscore <- @highscores do %>
         <tr class="highscore-row capitalize text-center">
-          <td class="rank text-lg border px-8 py-4 font-bold">
+          <td class="rank text-lg border md:px-8 py-4 text-center font-bold">
             <%= highscore.rank %>
           </td>
-          <td class="border px-8 py-4 font-bold"><%= highscore.name %></td>
-          <td class="border px-8 py-4"><%= highscore.clicks %></td>
-          <td class="border px-8 py-4"><%= highscore.time %></td>
-          <td class="score border px-8 py-4"><%= highscore.score %></td>
+          <td class="border md:px-8 py-4 text-center font-bold"><%= highscore.name %></td>
+          <td class="border md:px-8 py-4 text-center"><%= highscore.clicks %></td>
+          <td class="border md:px-8 py-4 text-center"><%= highscore.time %></td>
+          <td class="score border md:px-8 py-4 text-center"><%= highscore.score %></td>
         </tr>
       <% end %>
     </tbody>
