@@ -26,28 +26,43 @@
   }
 </style>
 
-<section class="w-full h-full flex flex-col items-center py-4 px-2 md:py-8 md:px-8 gap-8 max-w-screen-2xl m-auto">
-  <h1 class="text-2xl font-bold">Highscores</h1>
-  <table class="w-full md:w-2/3 text-sm text-left shadow-lg">
-    <thead class="text-xs uppercase bg-gray-700 text-white bg-gray-700">
+<.flash_group flash={@flash} />
+<header class="text-white py-4 px-8 flex items-center justify-between">
+  <h1 class="text-2xl font-bold">memory_leak</h1>
+  <nav>
+    <.link navigate={~p"/"} class="text-gray-300 hover:text-white px-4">
+      home
+    </.link>
+    <.link navigate={~p"/game"} class="text-gray-300 hover:text-white px-4">
+      game
+    </.link>
+    <.link navigate={~p"/highscore"} class="text-white px-4 font-bold">
+      highscore
+    </.link>
+  </nav>
+</header>
+
+<section class="w-full h-full flex flex-col">
+  <table class="w-4/5 place-self-center mt-4">
+    <thead class="bg-violet-500 text-white border">
       <tr>
-        <th class="p-x-4 md:px-8 py-4 text-center">Rank</th>
-        <th class="p-x-4 md:px-8 py-4 text-center">Name</th>
-        <th class="p-x-4 md:px-8 py-4 text-center">Clicks</th>
-        <th class="p-x-4 md:px-8 py-4 text-center">Time</th>
-        <th class="p-x-4 md:px-8 py-4 text-center">Score</th>
+        <th class="md:px-8 py-4 text-center">rank</th>
+        <th class="md:px-8 py-4 text-center">name</th>
+        <th class="md:px-8 py-4 text-center">clicks</th>
+        <th class="md:px-8 py-4 text-center">time</th>
+        <th class="md:px-8 py-4 text-center">score</th>
       </tr>
     </thead>
     <tbody>
       <%= for highscore <- @highscores do %>
-        <tr class="highscore-row capitalize text-center bg-white border-b bg-gray-800 border-gray-700 text-white">
-          <td class="rank text-lg border p-x-4 md:px-8 py-4 text-center font-bold">
+        <tr class="highscore-row capitalize text-center">
+          <td class="rank text-lg border md:px-8 py-4 text-center font-bold">
             <%= highscore.rank %>
           </td>
-          <td class="border p-x-4 md:px-8 py-4 text-center font-bold"><%= highscore.name %></td>
-          <td class="border p-x-4 md:px-8 py-4 text-center"><%= highscore.clicks %></td>
-          <td class="border p-x-4 md:px-8 py-4 text-center"><%= highscore.time %></td>
-          <td class="score border p-x-4 md:px-8 py-4 text-center"><%= highscore.score %></td>
+          <td class="border md:px-8 py-4 text-center font-bold"><%= highscore.name %></td>
+          <td class="border md:px-8 py-4 text-center"><%= highscore.clicks %></td>
+          <td class="border md:px-8 py-4 text-center"><%= highscore.time %></td>
+          <td class="score border md:px-8 py-4 text-center"><%= highscore.score %></td>
         </tr>
       <% end %>
     </tbody>

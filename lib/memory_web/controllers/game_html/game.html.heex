@@ -19,7 +19,6 @@
 
   .active {
     pointer-events: none;
-    background-color: #0026be20;
   }
 
   .done {
@@ -28,35 +27,54 @@
   }
 </style>
 
-<section class="flex flex-col justify-evenly py-4 px-2 md:py-8 md:px-8 gap-8 max-w-screen-2xl m-auto">
-  <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
-    <input
-      id="displayName"
-      type="text"
-      placeholder="Enter display name"
-      class="border rounded-full py-2 px-8"
-    />
-    <button id="startBtn" disabled class="bg-gray-400 font-bold text-white rounded-full py-2 px-8 ml-2 md:w-max" onclick="start(event)">
-      Start
-    </button>
+<header class="text-white py-4 px-8 flex items-center justify-between">
+  <h1 class="text-2xl font-bold">memory_leak</h1>
+  <nav>
+    <.link navigate={~p"/"} class="text-gray-300 hover:text-white px-4">
+      home
+    </.link>
+    <.link navigate={~p"/game"} class="text-white px-4 font-bold">
+      game
+    </.link>
+    <.link navigate={~p"/highscore"} class="text-gray-300 hover:text-white px-4">
+      highscore
+    </.link>
+  </nav>
+</header>
 
-    <div class="flex justify-center">
-      <h1 class="text-4xl text-right">timer: <span id="timer">0</span>s</h1>
+<section class="m-4 flex flex-col gap-8">
+  <div class="flex flex-wrap gap-4 items-center justify-evenly">
+    <h1 class="text-4xl order-2 lg:order-none">timer: <span id="timer">0</span>s</h1>
+
+    <div class="flex flex-wrap gap-2 w-full lg:w-max min-w-0 items-center justify-center">
+        <input
+          id="displayName"
+          type="text"
+          placeholder="Your display name"
+          class="border rounded-lg py-4 px-8 text-black text-2xl min-w-0"
+        />
+        <button
+          id="startBtn"
+          disabled
+          class="py-4 px-8 disabled:bg-gray-400 bg-violet-500 hover:bg-violet-700 text-white font-bold text-2xl rounded-lg w-max"
+          onclick="start(event)"
+        >
+          start game
+        </button>
     </div>
-    <div class="flex justify-center">
-      <h1 class="text-4xl text-right">tries: <span id="clicks">0</span></h1>
-    </div>
+
+    <h1 class="text-4xl order-3">tries: <span id="clicks">0</span></h1>
+
+    <h1 id="score" class="text-5xl order-4 w-full text-center hidden">score: <span id="scoreValue">0</span></h1>
   </div>
-  <div id="score" class="hidden flex justify-center">
-        <h1 class="text-5xl text-bold">Score: <span id="scoreValue">0</span></h1>
-  </div>
-  <ul class="grid gap-1 justify-items-center h-full w-full grid-cols-2 lg:grid-cols-4">
+
+  <ul class="flex flex-wrap gap-4 justify-center justify-items-center h-full w-full">
     <li
       :for={card <- @cards}
       data-id={card.id}
       data-language={card.language}
       data-type={card.type}
-      class="card disabled w-full h-64 lg:w-56 xl:w-64 2xl:w-72 flex justify-center items-center"
+      class="card disabled w-full md:w-80 h-56 flex justify-center items-center"
       onclick="handleCardClick(event)"
     >
       <%= if card.type == :logo do %>
@@ -66,15 +84,6 @@
       <% end %>
     </li>
   </ul>
-  <div class="flex justify-center">
-      <.link
-            navigate={~p"/highscore"}
-            target="_blank"
-            class="bg-blue-500 hover:bg-blue-700 text-white text-xl rounded-full py-2 px-8"
-          >
-            Highscores
-      </.link>
-  </div>
 </section>
 
 <script>
@@ -85,7 +94,6 @@
   let done = 0;
   let started = false;
   let timer = null;
-  let score = 0;
 
   const startBtn = document.getElementById('startBtn');
   const displayNameInput = document.getElementById('displayName');
@@ -93,12 +101,8 @@
   displayNameInput.addEventListener('input', () => {
     if (displayNameInput.value.length >= 3) {
       startBtn.removeAttribute('disabled');
-      startBtn.classList.remove('bg-gray-400');
-      startBtn.classList.add('bg-blue-500');
     } else {
       startBtn.setAttribute('disabled', true);
-      startBtn.classList.remove('bg-blue-500');
-      startBtn.classList.add('bg-gray-400');
     }
   });
 
@@ -118,22 +122,17 @@
       startBtn.innerText = "Reset"
       started = true;
     }
-    
+
     timer = setInterval(updateTimer, 1000);
   }
 
     function updateTimer() {
       document.getElementById('timer').innerText = ++seconds;
     }
-    
+
 
     function incrementClicks() {
       document.getElementById('clicks').innerText = ++clicks;
-    }
-
-    function displayScore() {
-          document.getElementById('scoreValue').innerText = Math.round(10000 / (seconds * 1.5 + clicks * 1.25));
-          document.getElementById('score').classList.remove('hidden');
     }
 
     async function endGame () {
@@ -145,10 +144,12 @@
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-CSRF-Token': window.csrfToken 
+          'X-CSRF-Token': window.csrfToken
         },
         body: JSON.stringify({name , clicks, time: seconds}),
       })
+
+      window.location = "/highscore"
     }
 
     function activate(card) {
@@ -159,7 +160,7 @@
     async function deactivate(cards, isPair) {
 
       if(!isPair) {
-        await sleep(1000);
+        await sleep(750);
       }
 
       cards.forEach(card => {
@@ -171,9 +172,10 @@
       done += 2;
 
       if(done === 16) {
-        await sleep(250);
-        endGame();
         displayScore();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        await sleep(1500);
+        endGame();
       }
      }
     }
@@ -208,6 +210,11 @@
         }
         firstCard = null;
       }
+    }
+
+    function displayScore() {
+      document.getElementById('scoreValue').innerText = Math.round(10000 / (seconds * 1.5 + clicks * 1.25));
+      document.getElementById('score').classList.remove('hidden');
     }
 
   function sleep(ms) {
