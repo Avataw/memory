@@ -27,45 +27,34 @@
   }
 </style>
 
-<header class="text-white py-4 px-8 flex items-center justify-between">
-  <h1 class="text-2xl font-bold">memory_leak</h1>
-  <nav>
-    <.link navigate={~p"/"} class="text-gray-300 hover:text-white px-4">
-      home
-    </.link>
-    <.link navigate={~p"/game"} class="text-white px-4 font-bold">
-      game
-    </.link>
-    <.link navigate={~p"/highscore"} class="text-gray-300 hover:text-white px-4">
-      highscore
-    </.link>
-  </nav>
-</header>
+<.navigation path="game" />
 
 <section class="m-4 flex flex-col gap-8">
   <div class="flex flex-wrap gap-4 items-center justify-evenly">
     <h1 class="text-4xl order-2 lg:order-none">timer: <span id="timer">0</span>s</h1>
 
     <div class="flex flex-wrap gap-2 w-full lg:w-max min-w-0 items-center justify-center">
-        <input
-          id="displayName"
-          type="text"
-          placeholder="Your display name"
-          class="border rounded-lg py-4 px-8 text-black text-2xl min-w-0"
-        />
-        <button
-          id="startBtn"
-          disabled
-          class="py-4 px-8 disabled:bg-gray-400 bg-violet-500 hover:bg-violet-700 text-white font-bold text-2xl rounded-lg w-max"
-          onclick="start(event)"
-        >
-          start game
-        </button>
+      <input
+        id="displayName"
+        type="text"
+        placeholder="Your display name"
+        class="border rounded-lg py-4 px-8 text-black text-2xl min-w-0"
+      />
+      <button
+        id="startBtn"
+        disabled
+        class="py-4 px-8 disabled:bg-gray-400 bg-violet-500 hover:bg-violet-700 text-white font-bold text-2xl rounded-lg w-max"
+        onclick="start(event)"
+      >
+        start game
+      </button>
     </div>
 
     <h1 class="text-4xl order-3">tries: <span id="clicks">0</span></h1>
 
-    <h1 id="score" class="text-5xl order-4 w-full text-center hidden">score: <span id="scoreValue">0</span></h1>
+    <h1 id="score" class="text-5xl order-4 w-full text-center hidden">
+      score: <span id="scoreValue">0</span>
+    </h1>
   </div>
 
   <ul class="flex flex-wrap gap-4 justify-center justify-items-center h-full w-full">
@@ -129,7 +118,6 @@
     function updateTimer() {
       document.getElementById('timer').innerText = ++seconds;
     }
-
 
     function incrementClicks() {
       document.getElementById('clicks').innerText = ++clicks;
