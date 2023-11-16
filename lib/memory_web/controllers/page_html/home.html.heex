@@ -1,5 +1,9 @@
 <header class="text-white py-4 px-8 flex items-center justify-between">
-  <h1 class="text-2xl font-bold">memory_leak</h1>
+  <div class="flex items-center gap-2">
+    <img src="/images/logo_violet.png" class="w-16" />
+    <h1 class="text-2xl font-bold">memory_leak</h1>
+  </div>
+
   <nav>
     <.link navigate={~p"/"} class="text-white px-4 font-bold">
       home
@@ -13,18 +17,25 @@
   </nav>
 </header>
 
-<section class="flex flex-col justify-evenly h-screen p-32 gap-y-8">
-  <h1 class="text-6xl font-bold">a memory game for programming languages</h1>
-  <h2 class="text-2xl ">
-    Think fast but don't err too much, or you won't make it into our top 10!
-  </h2>
+<section class="relative min-h-[80vh]">
+  <div class="relative flex flex flex-col justify-evenly p-32 gap-y-8 w-3/4 z-10">
+    <h1 class="text-6xl font-bold">a memory game for programming languages</h1>
+    <h2 class="text-2xl ">
+      Think fast but don't err too much, or you won't make it into our top 10!
+    </h2>
 
-  <div>
-    <.link
-      navigate={~p"/game"}
-      class="bg-violet-500 hover:bg-violet-700 text-white font-bold py-4 px-8 text-2xl rounded-lg"
-    >
-      start playing
-    </.link>
+    <div>
+      <.link
+        navigate={~p"/game"}
+        class="bg-violet-500 hover:bg-violet-700 text-white font-bold py-4 px-8 text-2xl rounded-lg"
+      >
+        start playing
+      </.link>
+    </div>
   </div>
+
+  <img
+    src="images/tiles_violet.png"
+    class="absolute animate-opacityChange opacity-50 z-0 right-0 bottom-0 w-1/2"
+  />
 </section>
