@@ -19,9 +19,10 @@ defmodule MemoryWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
-    get "/game", GameController, :play
+    # get "/game", GameController, :play
     post "/game", GameController, :score
 
+    live "/game", GameLive, :index
     live "/highscore", HighscoreLive, :index
   end
 

@@ -1,0 +1,10 @@
+<.flash_group flash={@flash} />
+<.navigation path="game" />
+
+<section class="w-full h-full flex flex-col">
+  <ul class="flex flex-wrap gap-4 justify-center justify-items-center h-full w-full">
+    <div :for={card <- @cards} phx-click="activate" phx-value-id={card.id}>
+      <MemoryWeb.Card.card card={card} />
+    </div>
+  </ul>
+</section>

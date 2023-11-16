@@ -8,9 +8,17 @@ defmodule Memory do
   """
 
   defmodule Card do
-    defstruct id: "", language: "", type: nil
+    defstruct id: "", language: "", type: nil, active: false, solved: false, resetting: false
 
-    def new(language, type), do: %Card{id: Ecto.UUID.generate(), language: language, type: type}
+    def new(language, type),
+      do: %Card{
+        id: Ecto.UUID.generate(),
+        language: language,
+        type: type,
+        active: false,
+        solved: false,
+        resetting: false
+      }
 
     def new_pair(language) do
       [
