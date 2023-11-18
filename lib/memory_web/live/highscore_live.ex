@@ -19,6 +19,11 @@ defmodule MemoryWeb.HighscoreLive do
 
   defp get_highscores() do
     Memory.Highscores.list_highscores()
+    |> Enum.filter(fn highscore ->
+      date = highscore.inserted_at
+
+      Date.compare(date, Date.utc_today()) == :eq
+    end)
     |> Enum.map(fn highscore ->
       %{
         name: highscore.name,
