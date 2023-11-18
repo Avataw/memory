@@ -142,6 +142,9 @@
 
     async function endGame () {
      clearInterval(timer);
+     displayScore();
+     window.scrollTo({ top: 0, behavior: 'smooth' });
+     await sleep(1500);
 
      name = displayNameInput.value;
 
@@ -154,7 +157,7 @@
         body: JSON.stringify({name , clicks, time: seconds}),
       })
 
-      window.location = "/highscore"
+      window.location = "/highscore?name="+name;
     }
 
     function activate(card) {
@@ -177,9 +180,6 @@
       done += 2;
 
       if(done === 16) {
-        displayScore();
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        await sleep(1500);
         endGame();
       }
      }

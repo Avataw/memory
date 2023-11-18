@@ -59,7 +59,7 @@
     </thead>
     <tbody>
       <%= for highscore <- @highscores do %>
-        <tr class="highscore-row capitalize text-center">
+        <tr class={if(highscore.name == @query_name, do: "bg-yellow-100 bg-opacity-10 highscore-row capitalize text-center", else: "highscore-row capitalize text-center")}>
           <td class="rank text-lg border md:px-8 py-4 text-center font-bold">
             <%= highscore.rank %>
           </td>

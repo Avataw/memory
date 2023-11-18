@@ -4,7 +4,13 @@ defmodule MemoryWeb.HighscoreLive do
 
   def mount(_params, _session, socket) do
     Phoenix.PubSub.subscribe(Memory.PubSub, "highscores:updated")
-    {:ok, assign(socket, highscores: get_highscores())}
+
+    socket =
+      socket
+      |> assign(:query_name, Map.get(_params, "name", ""))
+      |> assign(:highscores, get_highscores())
+
+    {:ok, socket}
   end
 
   def handle_info(:updated, socket) do
