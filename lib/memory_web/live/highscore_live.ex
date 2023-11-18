@@ -22,7 +22,12 @@ defmodule MemoryWeb.HighscoreLive do
     |> Enum.filter(fn highscore ->
       date = highscore.inserted_at
 
-      Date.compare(date, Date.utc_today()) == :eq
+      today = Date.utc_today()
+      # TODO.awu: remove this - it's is just for felipe.
+      noon_today_str = Date.to_string(today) <> "T11:00:00Z"
+      {:ok, noon_today, _} = DateTime.from_iso8601(noon_today_str)
+
+      DateTime.compare(date, noon_today) == :gt
     end)
     |> Enum.map(fn highscore ->
       %{
