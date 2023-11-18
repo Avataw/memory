@@ -19,6 +19,16 @@ defmodule MemoryWeb.HighscoreLive do
 
   defp get_highscores() do
     Memory.Highscores.list_highscores()
+    |> Enum.filter(fn highscore ->
+      date = highscore.inserted_at
+
+      today = Date.utc_today()
+      # TODO.awu: remove this - it's is just for felipe.
+      noon_today_str = Date.to_string(today) <> "T11:00:00Z"
+      {:ok, noon_today, _} = DateTime.from_iso8601(noon_today_str)
+
+      DateTime.compare(date, noon_today) == :gt
+    end)
     |> Enum.map(fn highscore ->
       %{
         name: highscore.name,
