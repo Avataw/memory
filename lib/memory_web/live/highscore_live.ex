@@ -2,12 +2,12 @@ defmodule MemoryWeb.HighscoreLive do
   use Phoenix.LiveView
   use MemoryWeb, :html
 
-  def mount(_params, _session, socket) do
+  def mount(params, _session, socket) do
     Phoenix.PubSub.subscribe(Memory.PubSub, "highscores:updated")
 
     socket =
       socket
-      |> assign(:query_name, Map.get(_params, "name", ""))
+      |> assign(:query_name, Map.get(params, "name", ""))
       |> assign(:highscores, get_highscores())
 
     {:ok, socket}
@@ -22,12 +22,7 @@ defmodule MemoryWeb.HighscoreLive do
     |> Enum.filter(fn highscore ->
       date = highscore.inserted_at
 
-      today = Date.utc_today()
-      # TODO.awu: remove this - it's is just for felipe.
-      noon_today_str = Date.to_string(today) <> "T11:00:00Z"
-      {:ok, noon_today, _} = DateTime.from_iso8601(noon_today_str)
-
-      DateTime.compare(date, noon_today) == :gt
+      Date.compare(date, Date.utc_today()) == :eq
     end)
     |> Enum.map(fn highscore ->
       %{
