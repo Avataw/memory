@@ -11,6 +11,7 @@ Ready to run in production? Please [check our deployment guides](https://hexdocs
 
 ## To deploy on prod
 
+```sh
 REALLY_LONG_SECRET=$(mix phx.gen.secret)
 export SECRET_KEY_BASE=$REALLY_LONG_SECRET
 export DATABASE_URL=ecto://USER:PW@localhost/DBNAME
@@ -21,6 +22,7 @@ MIX_ENV=prod mix compile
 MIX_ENV=prod mix assets.deploy
 
 PORT=4000 MIX_ENV=prod mix phx.server
+```
 
 ## Learn more
 
